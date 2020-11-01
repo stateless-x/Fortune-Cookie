@@ -24,25 +24,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         data = DataProvider.getData()
         Log.d("oncreate","data Arraylist:  ${data}")
         val listView = findViewById<ListView>(R.id.main_listview)
-        val cookieArrayAdapter = CookieArrayAdapter(this, data!!)
-
+        var cookieArrayAdapter = CookieArrayAdapter(this, data!!)
         var returnedData = returnedData()
-
         //don't add when the object is null
         if(returnedData != CookieData("${null}","${null}")) {
             data!!.add(returnedData)
         }
-
         Log.d("oncreate","Test:${returnedData}")
         Log.d("oncreate","data after data.add(test):${data}")
-
         //connect cookie-array adapter to listview
         listView.adapter = cookieArrayAdapter
-
         button.setOnClickListener {
             val intent = Intent(this, NewCookie::class.java)
             startActivity(intent)
@@ -52,7 +46,6 @@ class MainActivity : AppCompatActivity() {
      fun returnedData(): CookieData {
         //retrieve data from newcookie.kt
         val msg = intent.getStringExtra("message")
-//        val datelog = intent.getStringExtra("datelog")
         val status = intent.getStringExtra("status")
         var formatter= DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm a")
         var data:CookieData = CookieData("${msg}", "${status}")
@@ -75,10 +68,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            val cookie = mCookie[position]
-            val view: View
-            var formatter= DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm a")
 
+            var cookie = mCookie[position]
+            var view: View //data from each row
+            var formatter= DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm a")
+            //inflate the row in the listview
             if (convertView == null) {
                 val layoutInflater = LayoutInflater.from(parent!!.context)
                 view = layoutInflater.inflate(R.layout.main_row, parent, false)
@@ -88,19 +82,31 @@ class MainActivity : AppCompatActivity() {
                 view = convertView
             }
 
-            val viewHolder = view.tag as ViewHolder
+            var viewHolder = view.tag as ViewHolder
+            //display text in each row
             viewHolder.messageTextView.text = cookie.message
             viewHolder.logTextView.text = "Date: ${formatter.format(LocalDateTime.now())}"
 
             Log.d("getView","CookieStatus: ${cookie.status}")
             Log.d("getView","Cookie Array: ${cookie}")
+
+            //condition if status is positive/negative
             if(cookie.status=="negative"){
                 viewHolder.messageTextView.setTextColor(Color.parseColor("red"))
             }else if(cookie.status=="positive"){
                 viewHolder.messageTextView.setTextColor(Color.parseColor("blue"))
             }
+
+            view.setOnClickListener(){
+                mCookie.removeAt(position)
+                notifyDataSetChanged()
+                Log.d("viewclick","view clicked: ${position}")
+//                Log.d("viewclick","view clicked: ${mCookie[position]}")
+            }
             return view
         }
+
+
     }
 }
     private  class  ViewHolder(val messageTextView:TextView, val logTextView: TextView){
