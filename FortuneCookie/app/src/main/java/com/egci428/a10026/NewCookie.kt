@@ -50,7 +50,7 @@ class NewCookie : AppCompatActivity() {
         var asyncTask = object : AsyncTask<String, String, String>(){
             override fun onPreExecute(){
                 super.onPreExecute()
-                Toast.makeText(this@NewCookie,"Call Success",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@NewCookie,"Waiting",Toast.LENGTH_SHORT).show()
             }
 
             override fun doInBackground(vararg arg: String?): String {
