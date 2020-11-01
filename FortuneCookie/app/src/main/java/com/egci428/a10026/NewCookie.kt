@@ -26,6 +26,8 @@ class NewCookie : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_cookie)
+        supportActionBar!!.setTitle("                 Fortune Cookie")
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         wishBtn.setOnClickListener {
             fetchJson()
         }

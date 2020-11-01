@@ -6,9 +6,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_new_cookie.*
@@ -17,13 +15,13 @@ import kotlinx.android.synthetic.main.main_row.view.*
 import okhttp3.Cookie
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
+//Wanatbodee Buriwong 5980026
 class MainActivity : AppCompatActivity() {
     var data: ArrayList<CookieData>? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar!!.setTitle("                    Fortune Cookie")
         data = DataProvider.getData()
         Log.d("oncreate","data Arraylist:  ${data}")
         val listView = findViewById<ListView>(R.id.main_listview)
@@ -37,12 +35,23 @@ class MainActivity : AppCompatActivity() {
         Log.d("oncreate","data after data.add(test):${data}")
         //connect cookie-array adapter to listview
         listView.adapter = cookieArrayAdapter
-        button.setOnClickListener {
-            val intent = Intent(this, NewCookie::class.java)
-            startActivity(intent)
-        }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.custom_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.addBtn->addNewCookie()
+        }
+        return true
+    }
+    fun addNewCookie(){
+        val intent = Intent(this, NewCookie::class.java)
+        startActivity(intent)
+    }
      fun returnedData(): CookieData {
         //retrieve data from newcookie.kt
         val msg = intent.getStringExtra("message")
@@ -92,16 +101,15 @@ class MainActivity : AppCompatActivity() {
 
             //condition if status is positive/negative
             if(cookie.status=="negative"){
-                viewHolder.messageTextView.setTextColor(Color.parseColor("red"))
+                viewHolder.messageTextView.setTextColor(Color.parseColor("#FFA500"))
             }else if(cookie.status=="positive"){
-                viewHolder.messageTextView.setTextColor(Color.parseColor("blue"))
+                viewHolder.messageTextView.setTextColor(Color.parseColor("#0000FF"))
             }
 
             view.setOnClickListener(){
                 mCookie.removeAt(position)
                 notifyDataSetChanged()
                 Log.d("viewclick","view clicked: ${position}")
-//                Log.d("viewclick","view clicked: ${mCookie[position]}")
             }
             return view
         }

@@ -5,7 +5,4 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 data class CookieData(val message:String, val status:String){
-//    override fun toString(): String {
-//        return message
-//    }
 }
